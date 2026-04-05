@@ -10,9 +10,9 @@ A full-stack finance dashboard system built as part of a backend internship assi
 
 > Add your deployed links here after deployment
 
-- Frontend: `https://your-app.vercel.app`
-- Backend API: `https://your-api.render.com`
-- Health Check: `https://your-api.render.com/health`
+- Frontend: `https://finance-dashboard-xi-red.vercel.app/`
+- Backend API: `https://finance-dashboard-api-ytf9.onrender.com`
+- Health Check: `https://finance-dashboard-api-ytf9.onrender.com/health`
 
 
 
