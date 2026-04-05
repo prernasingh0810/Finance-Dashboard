@@ -74,7 +74,7 @@ finance-dashboard/
 
 Architecture
 
-![Architecture Diagram](./docs/architecture.png)
+
 
 
 Client (React)
