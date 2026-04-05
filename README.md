@@ -1,263 +1,294 @@
-# Finance dashboard — backend & client (MERN)
+# Finance Dashboard — MERN Stack
 
-This project is a small **finance dashboard** system: users sign in, see income/expense summaries, and (depending on their role) view or manage transactions and users.
+A full-stack finance dashboard system built as part of a backend internship assignment. Users can sign in, view income/expense summaries, and manage financial records based on their role.
 
-**Stack:** MongoDB · Express · React (Vite) · Node.js — the usual **MERN** setup.
-
-<img width="940" height="870" alt="image" src="https://github.com/user-attachments/assets/910edfcb-2816-4258-8f1e-c370a88f589e" />
-<img width="925" height="867" alt="image" src="https://github.com/user-attachments/assets/4f5ff01b-f26e-40a1-bfe9-89bf2dd14789" />
-<img width="928" height="863" alt="image" src="https://github.com/user-attachments/assets/4da6ed0b-a5a6-469b-8eb0-90d929489980" />
-
-
-
+**Built by:** Prerna Singh Baghel
 
 ---
 
-## What’s included
+## Live Demo
 
-- **Users and roles** — `viewer`, `analyst`, and `admin`, with different permissions.
-- **Financial records** — income/expense entries with amount, category, date, and notes.
-- **Dashboard data** — totals, category breakdown, recent activity, and simple trends.
-- **Security** — JWT login, role checks on the server (not only in the browser).
-- **Web UI** — login, dashboard, records list, and (for admins) user management and record create/edit/delete.
+> Add your deployed links here after deployment
 
----
-
-## Before you start (checklist)
-
-You need:
-
-1. **Node.js** installed (LTS is fine).
-2. A **MongoDB Atlas** account and a cluster (free tier works).
-3. A **connection string** for your database (see below).
+- Frontend: `https://your-app.vercel.app`
+- Backend API: `https://your-api.render.com`
+- Health Check: `https://your-api.render.com/health`
 
 ---
 
-## 1. Get your MongoDB connection string
+## Tech Stack
 
-1. Open [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and create a cluster if you don’t have one.
-2. **Database Access** → create a database user (username + password). Remember the password.
-3. **Network Access** → add your IP, or `0.0.0.0/0` for development (only if you accept the security tradeoff).
-4. **Database** → **Connect** → **Drivers** → copy the URI.
-5. Put your **password** into the URI where it says `<password>`.
-6. Add a **database name** in the path, for example:  
-   `...mongodb.net/finance_dashboard?retryWrites=true&w=majority`  
-   (the part before `?` is your database name).
-
----
-
-## 2. Configure environment variables
-
-1. Copy `server/.env.example` to `server/.env`.
-2. Fill in at least:
-
-| Variable | What it is |
-|----------|------------|
-| `MONGODB_URI` | Your full Atlas URI (with password and database name). |
-| `JWT_SECRET` | Any long random string, **at least 16 characters** (used to sign login tokens). |
-
-Optional:
-
-| Variable | Purpose |
-|----------|---------|
-| `PORT` | API port (default `5000`). |
-| `CLIENT_ORIGIN` | Your React app URL (default `http://localhost:5173`). |
-| `ALLOW_PUBLIC_REGISTER` | Set to `true` only if you want extra public sign-ups after the first user exists (dev only). |
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, Recharts, Plain CSS |
+| Backend | Node.js, Express |
+| Database | MongoDB Atlas |
+| Auth | JWT (jsonwebtoken + bcryptjs) |
+| Validation | express-validator |
+| Security | Helmet, CORS, express-rate-limit |
+| Logging | Morgan |
 
 ---
 
-## 3. Install dependencies
+## Features
 
-From the **project root** folder:
+- JWT based authentication with secure token verification
+- Role based access control — Viewer, Analyst, Admin
+- Financial records management with full CRUD
+- Soft delete — records are hidden not permanently removed
+- Dashboard with income/expense totals, category breakdown, and trends
+- Bar chart visualization of income vs expenses
+- Filters on records — by type, category, and date range
+- Pagination on records list
+- CSV export of financial records
+- User management — create users, assign roles, change status
+- Rate limiting on auth and API routes
+- Input validation with meaningful error messages
+- Seed script for sample data
 
+---
+
+## Project Structure
+
+finance-dashboard/
+├── client/                   → React frontend (Vite)
+│   └── src/
+│       ├── pages/            → Login, Dashboard, Records, Users
+│       ├── api.js            → Axios wrapper with JWT
+│       └── App.jsx           → Layout + routing
+│
+├── server/                   → Express backend
+│   └── src/
+│       ├── config/           → MongoDB connection
+│       ├── controllers/      → Business logic
+│       ├── middleware/        → Auth, RBAC, validation, error handler
+│       ├── models/           → User, FinancialRecord schemas
+│       ├── routes/           → API route definitions
+│       ├── services/         → Dashboard aggregation service
+│       ├── utils/            → JWT helper
+│       ├── validators/       → Input validation rules
+│       └── scripts/seed.js   → Sample data seeder
+│
+└── README.md
+
+
+Architecture
+
+
+Client (React)
+│
+│  HTTP / REST
+▼
+Express Server
+│
+├── Rate Limiter
+├── CORS + Helmet
+├── JWT Auth Middleware
+├── RBAC Guard (role check)
+│
+├── /api/auth      → Auth controller
+├── /api/records   → Record controller
+├── /api/dashboard → Dashboard service
+└── /api/users     → User controller
+│
+▼
+MongoDB Atlas
+(users + records collections)
+
+---
+
+## Role Permissions
+
+| Role | Dashboard | View Records | Create / Edit / Delete | Manage Users |
+|---|---|---|---|---|
+| Viewer | ✅ | ❌ | ❌ | ❌ |
+| Analyst | ✅ | ✅ | ❌ | ❌ |
+| Admin | ✅ | ✅ | ✅ | ✅ |
+
+Role checks are enforced on the **server side** — the browser cannot bypass them.
+
+---
+
+## Local Setup
+
+### Prerequisites
+- Node.js v18+
+- MongoDB Atlas account (free tier works)
+
+### Step 1 — Clone the repo
+```bash
+git clone https://github.com/your-username/finance-dashboard.git
+cd finance-dashboard
+```
+
+### Step 2 — Set up environment variables
+Copy the example file and fill in your values:
+```bash
+cp server/.env.example server/.env
+```
+```env
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/finance_dashboard
+JWT_SECRET=any_long_random_string_min_16_chars
+PORT=5000
+CLIENT_ORIGIN=http://localhost:5173
+```
+
+### Step 3 — Install dependencies
 ```bash
 npm install
 npm run install:all
 ```
 
-That installs the root helper scripts, the `server` package, and the `client` package.
-
----
-
-## 4. Load sample data (recommended)
-
-This creates a default **admin** and a few sample transactions so the dashboard and lists are not empty.
-
+### Step 4 — Load sample data
 ```bash
 npm run seed
 ```
 
-Default admin login (you can change these with `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` in `server/.env` before seeding):
+Default admin credentials after seeding:
 
 | Field | Value |
-|-------|--------|
-| Email | `admin@example.com` |
-| Password | `AdminPass123!` |
+|---|---|
+| Email | admin@example.com |
+| Password | AdminPass123! |
 
----
-
-## 5. Run the app
-
+### Step 5 — Run the app
 ```bash
 npm run dev
 ```
 
-- **Website (React):** [http://localhost:5173](http://localhost:5173)
-- **API:** [http://localhost:5000](http://localhost:5000)
-- **Health check:** [http://localhost:5000/health](http://localhost:5000/health) — should return JSON with `"ok": true`.
+- Frontend → http://localhost:5173
+- Backend → http://localhost:5000
+- Health check → http://localhost:5000/health
 
 ---
 
-## How to test the assignment (step by step)
+## API Reference
 
-Follow this order once; it matches what you’ll want to show or explain.
+**Base URL:** `http://localhost:5000`
 
-### A. Smoke test (everyone)
-
-1. Open `http://localhost:5000/health` — you should see a small JSON response.
-2. Open `http://localhost:5173` and log in with the **seed admin** (see table above).
-3. Open **Dashboard** — you should see totals and recent activity.
-4. Open **Records** — you should see a table and **Create / Edit / Delete** (admin only).
-5. Open **Admin: Users** — you should see user list and create form (admin only).
-
----
-
-### B. Test **admin**
-
-1. **Records** — create a new entry (amount, type, category, date, notes). Save.
-2. Edit one row, then try delete (soft delete).
-3. **Admin: Users** — create a new user with role **viewer** and another with role **analyst** (use different emails and passwords you remember).
-
----
-
-### C. Test **viewer**
-
-1. Log out, then log in as the **viewer** account you created.
-2. **Dashboard** — should work.
-3. **Records** — should show an error (viewers cannot list raw transaction rows).
-
----
-
-### D. Test **analyst**
-
-1. Log out, then log in as the **analyst** account.
-2. **Dashboard** — should work.
-3. **Records** — should show the table (read-only in the UI; no admin create/delete unless you add that for analysts).
-
----
-
-### E. Quick API checks (optional)
-
-Use Postman, Thunder Client, or `curl`:
-
-1. **Login:** `POST http://localhost:5000/api/auth/login` with JSON body `{ "email": "...", "password": "..." }`. Copy the `token` from the response.
-2. **Authorized request:** `GET http://localhost:5000/api/dashboard/summary` with header `Authorization: Bearer <paste token>`.
-
-If the token is missing or wrong, you get **401**. If your role is not allowed for that route, you get **403**.
-
----
-
-## Who can do what
-
-| Role | Dashboard | See transaction list | Add / edit / delete transactions | Manage users |
-|------|-----------|----------------------|----------------------------------|--------------|
-| Viewer | Yes | No | No | No |
-| Analyst | Yes | Yes | No | No |
-| Admin | Yes | Yes | Yes | Yes |
-
-Rules are enforced in the **API** (`server`), so the browser cannot bypass them.
-
----
-
-## Sign-up rules
-
-- If the database has **no users**, the first registration via `POST /api/auth/register` creates a **viewer** only.
-- After that, new accounts are normally created by an **admin** (`POST /api/users`) unless you set `ALLOW_PUBLIC_REGISTER=true` for local experiments.
-
----
-
-## API overview (summary)
-
-Base URL: `http://localhost:5000` (or your deployed host).
-
-- **Headers:** `Content-Type: application/json` for bodies with JSON.  
-- **Auth:** `Authorization: Bearer <token>` after login.
+**Headers:**
+Content-Type: application/json
+Authorization: Bearer <token>
 
 ### Auth
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| POST | `/api/auth/register` | Public | Register first user |
+| POST | `/api/auth/login` | Public | Login, returns token |
+| GET | `/api/auth/me` | All roles | Get current user |
 
-| Method | Path | Notes |
-|--------|------|--------|
-| POST | `/api/auth/register` | First user or when `ALLOW_PUBLIC_REGISTER=true`. |
-| POST | `/api/auth/login` | Returns `token` and `user`. |
-| GET | `/api/auth/me` | Current user (needs token). |
-
-### Users (admin only)
-
-| Method | Path | Notes |
-|--------|------|--------|
-| GET | `/api/users` | List users. |
-| GET | `/api/users/:id` | One user. |
-| POST | `/api/users` | Create user (`email`, `password`, `name`, optional `role`, `status`). |
-| PATCH | `/api/users/:id` | Update fields. |
-| DELETE | `/api/users/:id` | Delete (cannot delete yourself). |
-
-### Financial records
-
-| Method | Path | Notes |
-|--------|------|--------|
-| GET | `/api/records` | Analyst and admin. Query: `page`, `limit`, `type`, `category`, `dateFrom`, `dateTo`, `search`. |
-| GET | `/api/records/:id` | One record. |
-| POST | `/api/records` | Admin. Body: `amount`, `type` (`income` or `expense`), `category`, `date` (ISO string), optional `notes`. |
-| PATCH | `/api/records/:id` | Admin. |
-| DELETE | `/api/records/:id` | Admin. Soft delete (`deletedAt`). |
+### Financial Records
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| GET | `/api/records` | Analyst + Admin | List with filters + pagination |
+| GET | `/api/records/export` | Analyst + Admin | Download as CSV |
+| GET | `/api/records/:id` | Analyst + Admin | Get single record |
+| POST | `/api/records` | Admin | Create record |
+| PATCH | `/api/records/:id` | Admin | Update record |
+| DELETE | `/api/records/:id` | Admin | Soft delete |
 
 ### Dashboard
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| GET | `/api/dashboard/summary` | All roles | Totals, categories, trends |
 
-| Method | Path | Notes |
-|--------|------|--------|
-| GET | `/api/dashboard/summary` | Totals, categories, recent rows, trend. Query: `trend=weekly` or `monthly`, `recentLimit`. |
+### Users
+| Method | Endpoint | Access | Description |
+|---|---|---|---|
+| GET | `/api/users` | Admin | List all users |
+| GET | `/api/users/:id` | Admin | Get single user |
+| POST | `/api/users` | Admin | Create user |
+| PATCH | `/api/users/:id` | Admin | Update role or status |
+| DELETE | `/api/users/:id` | Admin | Delete user |
 
 ---
 
-## Running tests (automated)
-
+## Testing
 ```bash
 npm run test
 ```
 
-Runs a few checks (for example health and auth) without needing MongoDB running for those tests.
+Runs automated checks including health check and auth tests.
+
+You can also test manually using Postman:
+
+1. `POST /api/auth/login` with `{ "email": "admin@example.com", "password": "AdminPass123!" }`
+2. Copy the token from response
+3. Add header `Authorization: Bearer <token>` to all subsequent requests
+4. Try `GET /api/dashboard/summary` — should return totals
+5. Try `GET /api/records` — should return paginated records
 
 ---
 
-## Project folders
+## Design Decisions
 
-| Folder | Contents |
-|--------|----------|
-| `server/` | Express API, models, routes, validation, seed script. |
-| `client/` | React + Vite app; in dev it proxies `/api` to the server. |
+### Why MongoDB?
+MongoDB's flexible document schema works well for financial records where fields like `notes` and `category` are variable. It also makes aggregation pipelines straightforward for dashboard analytics.
 
----
+### Why JWT?
+JWT is stateless — the server doesn't need to store sessions. Each token contains the user's ID and role, so middleware can verify identity and permissions in a single step without a database lookup.
 
-## If something fails
+### Why RBAC middleware?
+Centralizing role checks in a dedicated `rbac.js` middleware means access rules are defined in one place. Adding a new protected route is a single line — `requireAdmin` or `requireAnalystOrAdmin`.
 
-| Symptom | What to try |
-|---------|-------------|
-| Cannot connect to MongoDB | Check `MONGODB_URI`, password, and Atlas **Network Access**. |
-| `JWT_SECRET` error | Must be set and at least 16 characters. |
-| Port in use | Change `PORT` in `server/.env` or stop the other process. |
-| Blank dashboard after login | Run `npm run seed` once; check Atlas that data exists. |
-| 403 on Records as viewer | Expected — viewers only see the dashboard. |
+### Why soft delete?
+Hard deleting records would make it impossible to audit past data or recover from mistakes. Soft delete sets a `deletedAt` timestamp — the record stays in the database but is excluded from all queries and totals.
 
----
+### Why rate limiting?
+Rate limiting on `/api/auth` prevents brute force password attacks. The auth routes are limited to 100 requests per 15 minutes, while other API routes allow 500 requests per 15 minutes.
 
-## Design notes (for your report)
-
-- **JWT in the browser** is stored in `localStorage` in this demo; production apps often prefer httpOnly cookies.
-- **Soft delete** keeps old rows in the database but hides them from totals and lists.
-- **Rate limits** apply to `/api/auth` and `/api` routes to reduce abuse.
+### Why priority field on records?
+Added a `priority` field (low / medium / high) to financial records to support better filtering and analytical thinking — for example, flagging high priority expenses for immediate attention.
 
 ---
 
-## Deploying (short)
+## Assumptions
 
-You can host the API on services like **Render** or **Railway**: set the same env vars (`MONGODB_URI`, `JWT_SECRET`, `NODE_ENV=production`), use **Root directory** `server`, build `npm install`, start `npm start`. Run `npm run seed` once from your machine against the same Atlas database if you need the admin user.
+- First user registration creates a viewer by default — admin must be created via seed script
+- JWT is stored in localStorage for this demo — production apps should use httpOnly cookies
+- Soft delete is used instead of hard delete for audit and recovery purposes
+- MongoDB Atlas free tier (M0) is sufficient for this demo
+- CSV export returns all records matching current filters without pagination
+
+---
+
+## Edge Cases Handled
+
+- Deleting a non-existing or already deleted record returns 404
+- Duplicate email registration returns 409 with field name
+- Invalid JWT returns 401 with clear message
+- Expired JWT returns 401 with "session expired" message
+- Viewer accessing records returns 403 with role explanation
+- Empty dashboard returns zeros not errors
+- Admin cannot delete their own account
+
+---
+
+## What I Would Improve With More Time
+
+- Move all DB logic into a dedicated service layer (recordService.js)
+- Add httpOnly cookie based auth instead of localStorage
+- Add Swagger UI for interactive API documentation
+- Add more comprehensive test coverage
+- Add email notifications for large transactions
+- Add date range filter on dashboard summary
+
+---
+
+## Deployment
+
+### Backend (Render)
+1. Connect GitHub repo to Render
+2. Set Root Directory to `server`
+3. Build command: `npm install`
+4. Start command: `npm start`
+5. Add environment variables: `MONGODB_URI`, `JWT_SECRET`, `NODE_ENV=production`
+6. Run `npm run seed` once against the same Atlas DB
+
+### Frontend (Vercel)
+1. Connect GitHub repo to Vercel
+2. Set Root Directory to `client`
+3. Build command: `npm run build`
+4. Output directory: `dist`
+5. Add environment variable: `VITE_BASE_URL=https://your-api.render.com`
+
