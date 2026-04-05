@@ -49,7 +49,7 @@ A full-stack finance dashboard system built as part of a backend internship assi
 ---
 
 ## Project Structure
-'''
+```
 
 finance-dashboard/
 ├── client/                   → React frontend (Vite)
@@ -71,12 +71,12 @@ finance-dashboard/
 │       └── scripts/seed.js   → Sample data seeder
 │
 └── README.md
-'''
+```
 
 Architecture
 
 
-'''
+```
 
 Client (React)
 │
@@ -98,7 +98,7 @@ Express Server
 MongoDB Atlas
 (users + records collections)
 
-'''
+```
 ---
 
 ## Role Permissions
