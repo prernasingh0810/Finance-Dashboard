@@ -14,6 +14,21 @@ A full-stack finance dashboard system built as part of a backend internship assi
 - Backend API: `https://your-api.render.com`
 - Health Check: `https://your-api.render.com/health`
 
+
+
+## Screenshots
+
+### Login
+![Login](./docs/login.png)
+
+### Dashboard
+![Dashboard](./docs/dashboard.png)
+
+### Records
+![Records](./docs/records.png)
+
+### User Management
+![Users](./docs/users.png)
 ---
 
 ## Tech Stack
