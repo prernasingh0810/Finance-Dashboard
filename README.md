@@ -18,8 +18,7 @@ A full-stack finance dashboard system built as part of a backend internship assi
 
 ## Screenshots
 
-### Login
-![Login](./docs/login.png)
+
 
 ### Dashboard
 ![Dashboard](./docs/dashboard.png)
