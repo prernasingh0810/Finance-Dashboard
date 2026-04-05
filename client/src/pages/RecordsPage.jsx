@@ -61,9 +61,12 @@ export default function RecordsPage() {
   async function handleExportCSV() {
     try {
       const token = localStorage.getItem("finance_token");
-      const res = await fetch("http://localhost:5000/api/records/export", {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+      const res = await fetch(`${baseUrl}/api/records/export`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+
       if (!res.ok) throw new Error("Export failed");
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
